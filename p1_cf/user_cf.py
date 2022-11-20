@@ -35,6 +35,12 @@ def loadData():
     return user_item_matrix
 
 
+# 定义预测函数
+def predict(w_uv, r_vi=1):
+    p = w_uv * r_vi
+    return p
+
+
 # 定义余弦相似性度量计算
 def cosine(ls_1, ls_2):
     Numerator = 0  # 公式中的分子
@@ -66,6 +72,7 @@ def getRecommandItems(similarity_matrix, user_item):
     # 推荐物品
     max_sim = [0, 0, 0]  # 存放每个用户的相似用户
     r_list = [[], [], []]  # 存放推荐给每个用户的物品
+    p = [[], [], []]  # 每个用户被推荐物品的预测值列表
     # 寻找每个用户相似的用户
     for i in range(n):
         for j in range(len(similarity_matrix[i])):
@@ -77,7 +84,8 @@ def getRecommandItems(similarity_matrix, user_item):
         for x in range(m):  # m个物品需要循环m次
             if user_item[i][x] == 0 and user_item[j][x] == 1:  # 目标用户不知道，而相似用户知道
                 r_list[i].append(item[x])
-    return r_list
+                p[i].append(predict(similarity_matrix[i][j]))
+    return r_list, p
 
 
 if __name__ == '__main__':
@@ -86,10 +94,12 @@ if __name__ == '__main__':
     # 2.计算相似度矩阵,找到每个用户最相似的用户
     user_similar_matrix = getSimilarMatrix(user_item_matrix)
     # 3.推荐物品
-    recommandItems = getRecommandItems(user_similar_matrix, user_item_matrix)
+    recommandItems,p = getRecommandItems(user_similar_matrix, user_item_matrix)
     # 打印结果
     for i in range(n):  # n个用户循环n次
         if len(recommandItems[i]) > 0:  # 当前用户有被推荐的物品
             print("向{:}推荐的物品有：".format(user[i]), end='')
             print(recommandItems[i])
+            print("该用户对以上物品该兴趣的预测值为：", end='')
+            print(p[i])
         print()
