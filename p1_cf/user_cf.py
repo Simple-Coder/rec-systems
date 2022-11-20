@@ -1,4 +1,5 @@
 '''
+https://jiang-hs.github.io/post/2D2skmyaX/
 用户/物品 | 物品a | 物品b | 物品c | 物品d
 用户A     |   √  |       |   √   |
 用户B     |   √  |   √   |       |   √
